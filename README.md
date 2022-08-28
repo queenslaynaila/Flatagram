@@ -110,59 +110,59 @@ deliverables!**
    saved to the server. You will need to make a request that follows this
    structure:
 
-    ```txt
-    POST /comments
+   ```txt
+   POST /comments
 
-    Request Headers: {
-      Content-Type: application/json
-    }
+   Request Headers: {
+     Content-Type: application/json
+   }
 
-    Request Body: {
-      "imageId": 1,
-      "content": "your comment here"
-    }
+   Request Body: {
+     "imageId": 1,
+     "content": "your comment here"
+   }
 
-    ----
+   ----
 
-    Example Response: {
-      "id": 4,
-      "imageId": 1,
-      "content": "your comment here"
-    }
-    ```
+   Example Response: {
+     "id": 4,
+     "imageId": 1,
+     "content": "your comment here"
+   }
+   ```
 
 2. When a user deletes a comment by clicking it, in addition to having the
    comment removed from the page, it should **also** be removed on the server.
    You will need to make a request that follows this structure:
 
-    ```txt
-    DELETE /comments/:id
+   ```txt
+   DELETE /comments/:id
 
-    ----
+   ----
 
-    Example Response: {}
-    ```
+   Example Response: {}
+   ```
 
 3. When a user gets a new random dog image by clicking it, in addition to
    displaying the new image on the page, it should **also** be updated on the
    server. You will need to make a request that follows this structure:
 
-    ```txt
-    PATCH /images/1
+   ```txt
+   PATCH /images/1
 
-    Request Headers: {
-      Content-Type: application/json
-    }
+   Request Headers: {
+     Content-Type: application/json
+   }
 
-    Request Body: {
-      "image": "new dog image url here"
-    }
-    ----
+   Request Body: {
+     "image": "new dog image url here"
+   }
+   ----
 
-    Example Response: {
-      "id": 1,
-      "title": "Woofing those bugs away",
-      "likes": 0,
-      "image": "new dog image url here"
-    }
-    ```
+   Example Response: {
+     "id": 1,
+     "title": "Woofing those bugs away",
+     "likes": 0,
+     "image": "new dog image url here"
+   }
+   ```
