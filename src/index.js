@@ -1,52 +1,81 @@
-// write your code here
-const localAPI = "http://localhost:3000/images/1";
 const imageContainer = document.getElementById("card-image");
 const imageTitle = document.getElementById("card-title");
 const likeCounter = document.getElementById("like-count");
 const listComments = document.getElementById("comments-list");
 const likeButton = document.getElementById("like-button");
 const form = document.getElementById("comment-form");
-let likes;
+listComments.innerHTML = "";
+const inputField = document.getElementById("comment-input");
+let like;
 
-form.addEventListener("submit", addComment);
+let images = [];
 
-likeButton.addEventListener("click", () => {
-  likes = likes + 1;
-  showlikes();
-});
+const getImages = () => {
+  return fetch("http://localhost:3000/images").then((response) =>
+    response.json()
+  );
+};
 
-fetch(localAPI)
-  .then((res) => res.json())
-  .then((data) => {
-    updateDOM(data);
+function updateUI() {
+  images.forEach((image) => {
+    imageTitle.textContent = image.title;
+    imageContainer.src = image.image;
+    likeCounter.textContent = `${image.likes} likes`;
   });
-
-function updateDOM(data) {
-  likes = data.likes;
-  imageContainer.src = `${data.image}`;
-  imageTitle.textContent = `${data.title}`;
-  showlikes();
-  updateCommentsDOM(data.comments);
 }
-
-function showlikes() {
-  likeCounter.textContent = `${likes} likes`;
-}
-
-function updateCommentsDOM(comments) {
-  listComments.innerHTML = "";
-  comments.forEach(showCommentOnDOM);
-}
-
 function showCommentOnDOM(comment) {
   const commentList = document.createElement("li");
   commentList.textContent = comment.content;
   listComments.append(commentList);
 }
 
-function addComment(e) {
-  e.preventDefault();
-  const userComment = e.target.comment.value;
-  showCommentOnDOM({ content: userComment });
-  e.target.reset();
+let usercomments = [];
+const getComments = () => {
+  return fetch("http://localhost:3000/comments").then((response) =>
+    response.json()
+  );
+};
+
+function updateComments() {
+  usercomments.forEach((comment) => {
+    const commentList = document.createElement("li");
+    commentList.textContent = comment.content;
+    listComments.append(commentList);
+  });
 }
+function postComments(comment) {
+  fetch("http://localhost:3000/comments", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      imageId: 1,
+      content: `${comment}`,
+    }),
+  });
+}
+document.addEventListener("DOMContentLoaded", async () => {
+  images = await getImages();
+  console.log(images[0].likes);
+  updateUI(images);
+  usercomments = await getComments();
+  updateComments(usercomments);
+
+  likeButton.addEventListener("click", () => {
+    like = images[0].likes;
+    if (likeButton.textContent === "♥") {
+      likeButton.textContent = "♡";
+      like = like - like;
+    } else {
+      likeButton.textContent = "♥";
+      like++;
+    }
+    likeCounter.textContent = `${like} likes`;
+  });
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    postComments(e.target.comment.value);
+  });
+});
